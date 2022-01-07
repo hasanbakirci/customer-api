@@ -13,5 +13,6 @@ namespace CustomerService.Repositories.Interfaces
         Task<bool> CreateMany(List<Customer> customers);
         Task<bool> SoftDelete(Guid id);
         Task<bool> Validate(Guid id);
+        Task<IEnumerable<Customer>> Page(int? queryPage);
     }
 }

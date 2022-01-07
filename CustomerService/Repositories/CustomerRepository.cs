@@ -33,7 +33,7 @@ namespace CustomerService.Repositories
 
         public async Task<Guid> Create(Customer customer)
         {
-            customer.CreatedAt = DateTime.Now;
+            customer.CreatedAt = DateTime.UtcNow;
             customer.isDeleted = false;
             await _customer.InsertOneAsync(customer);
             return customer.Id;
@@ -83,6 +83,14 @@ namespace CustomerService.Repositories
         {
             var result = await _customer.FindAsync(c => c.Id == id);
             return result.Any();   
+        }
+
+        public async Task<IEnumerable<Customer>> Page(int? queryPage)
+        {
+            int page = queryPage.GetValueOrDefault(1) == 0 ? 1 : queryPage.GetValueOrDefault(1);
+            int perPage = 5;
+            var customers = await _customer.Find(c => c.isDeleted == false).Skip((page - 1) * perPage).Limit(perPage).ToListAsync();
+            return customers;
         }
     }
 }

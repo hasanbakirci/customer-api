@@ -19,6 +19,7 @@ namespace CustomerService.Services.Interfaces
         Task<Response<bool>> CreateMany(List<CreateCustomerRequest> requests);
         Task<Response<bool>> SoftDelete(Guid id);
         Task<Response<bool>> Validate(Guid id);
+        Task<Response<IEnumerable<CustomerResponse>>> Page(int queryPage);
         
     }
 }

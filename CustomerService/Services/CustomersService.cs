@@ -73,6 +73,12 @@ namespace CustomerService.Services
             return new ErrorResponse<CustomerResponse>(ResponseStatus.NotFound, default, ResultMessage.NotFoundCustomer);
         }
 
+        public async Task<Response<IEnumerable<CustomerResponse>>> Page(int queryPage)
+        {
+            var customers = await _customerRepository.Page(queryPage);
+            return new SuccessResponse<IEnumerable<CustomerResponse>>(customers.ConvertToCustomerListResponse());
+        }
+
         public async Task<Response<bool>> SoftDelete(Guid id)
         {
             var result = await _customerRepository.SoftDelete(id);

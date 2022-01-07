@@ -73,5 +73,11 @@ namespace CustomerService.Controllers
             return ApiResponse(result);
         }
 
+        [HttpGet("Page/{queryPage}")]
+        public async Task<IActionResult> Page(int queryPage){
+            var customers = await _customersService.Page(queryPage);
+            return ApiResponse(customers);
+        }
+
     }
 }

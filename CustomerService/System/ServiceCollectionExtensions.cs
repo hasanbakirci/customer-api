@@ -25,7 +25,7 @@ namespace CustomerService.System
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
 
 
-            BsonSerializer.RegisterSerializer(new StringSerializer(MongoDB.Bson.BsonType.String));
+            BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
             services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
