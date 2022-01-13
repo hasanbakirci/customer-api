@@ -9,7 +9,6 @@ using CustomerService.Model.Dtos.Requests.RequestsValidations;
 using CustomerService.Model.Dtos.Responses;
 using CustomerService.Repositories.Interfaces;
 using CustomerService.Services.Interfaces;
-using FluentValidation;
 
 namespace CustomerService.Services
 {
@@ -73,10 +72,12 @@ namespace CustomerService.Services
             return new ErrorResponse<CustomerResponse>(ResponseStatus.NotFound, default, ResultMessage.NotFoundCustomer);
         }
 
-        public async Task<Response<IEnumerable<CustomerResponse>>> Page(int queryPage)
+        public async Task<Response<CustomerPaginationResponse>> Page(int page, int formSize)
         {
-            var customers = await _customerRepository.Page(queryPage);
-            return new SuccessResponse<IEnumerable<CustomerResponse>>(customers.ConvertToCustomerListResponse());
+            var customers = await _customerRepository.Page(page,formSize);
+            var totalCustomerCount = await _customerRepository.TotalCountOfCustomer();
+            var currentItemCount = totalCustomerCount >= (page * formSize) ? formSize : (int)(totalCustomerCount % formSize);
+            return new SuccessResponse<CustomerPaginationResponse>(customers.ConvertToPaginationCustomerResponse(page, formSize,totalCustomerCount, currentItemCount));
         }
 
         public async Task<Response<bool>> SoftDelete(Guid id)
@@ -91,8 +92,6 @@ namespace CustomerService.Services
         {
             ValidationTool.Validate(new UpdateCustomerRequestValidator(), request);
 
-            UpdateCustomerRequestValidator validator = new UpdateCustomerRequestValidator();
-            validator.ValidateAndThrow(request);
             var customer = request.ConverToCustomer(id);
             var result = await _customerRepository.Update(customer.Id, customer);
             if (result)

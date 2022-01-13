@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Core.Model;
 using CustomerService.Model;
 using CustomerService.Model.Dtos.Requests;
@@ -86,17 +85,6 @@ namespace CustomerService.Extensions
                 };
         }
 
-        // public static Address ConvertToAddress(this UpdateAddressRequest request){
-        //     return new Address
-        //         {
-        //             AddressLine = request.AddressLine,
-        //             City = request.City,
-        //             Country = request.Country,
-        //             CityCode = request.CityCode
-        //         };
-        // }
-
-
         public static List<Customer> ConvertToCustomerList(this List<CreateCustomerRequest> requests){
             List<Customer> customers = new List<Customer>();
             requests.ToList().ForEach(c => customers.Add(
@@ -114,6 +102,37 @@ namespace CustomerService.Extensions
                  }));
                  return customers;
 
+        }
+
+
+        public static CustomerPaginationResponse ConvertToPaginationCustomerResponse(this IEnumerable<Customer> customers, int page, int formSize,long totalCustomerCount,int currentItemCount){
+            List<CustomerResponse> customerResponses = new List<CustomerResponse>();
+            customers.ToList().ForEach(c => customerResponses.Add(
+                new CustomerResponse
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Email = c.Email,
+                        CreatedAt = c.CreatedAt,
+                        UpdatedAt = c.UpdatedAt,
+                        isDeleted = c.isDeleted,
+                        AddressResponse = new AddressResponse 
+                                    {
+                                        AddressLine = c.Address.AddressLine,
+                                        City = c.Address.City,
+                                        Country = c.Address.Country,
+                                        CityCode = c.Address.CityCode
+                                    }
+                    }
+            ));
+            return new CustomerPaginationResponse
+                        {
+                            CustomerResponses = customerResponses,
+                            Page = page,
+                            FormSize = formSize,
+                            TotalItemCount = totalCustomerCount,
+                            CurrentItemCount = currentItemCount
+                        };
         }
     }
 }

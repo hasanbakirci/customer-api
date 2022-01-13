@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Model;
 using Core.Repositories.Settings;
 using CustomerService.Model;
 using CustomerService.Repositories.Interfaces;
@@ -85,12 +84,18 @@ namespace CustomerService.Repositories
             return result.Any();   
         }
 
-        public async Task<IEnumerable<Customer>> Page(int? queryPage)
+        public async Task<IEnumerable<Customer>> Page(int? page, int formSize)
         {
-            int page = queryPage.GetValueOrDefault(1) == 0 ? 1 : queryPage.GetValueOrDefault(1);
-            int perPage = 5;
+            int querypage = page.GetValueOrDefault(1) == 0 ? 1 : page.GetValueOrDefault(1);
+            int perPage = formSize;
             var customers = await _customer.Find(c => c.isDeleted == false).Skip((page - 1) * perPage).Limit(perPage).ToListAsync();
             return customers;
+        }
+
+        public async Task<long> TotalCountOfCustomer()
+        {
+            var totalCount = await _customer.CountDocumentsAsync(c => c.isDeleted == false);
+            return totalCount;
         }
     }
 }
