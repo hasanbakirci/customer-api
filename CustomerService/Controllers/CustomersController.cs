@@ -74,8 +74,8 @@ namespace CustomerService.Controllers
         }
 
         [HttpGet("Page/")]
-        public async Task<IActionResult> Page([FromQuery(Name = "page")] int page, int formSize){
-            var customers = await _customersService.Page(page,formSize);
+        public async Task<IActionResult> Page([FromQuery(Name = "from")] int from, int size){
+            var customers = await _customersService.Page(from,size);
             return ApiResponse(customers);
         }
 

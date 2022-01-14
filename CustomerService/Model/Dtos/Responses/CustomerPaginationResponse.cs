@@ -8,8 +8,8 @@ namespace CustomerService.Model.Dtos.Responses
     public class CustomerPaginationResponse
     {
         public List<CustomerResponse> CustomerResponses { get; set; }
-        public int Page { get; set; }
-        public int FormSize { get; set; }
+        public int From { get; set; }
+        public int Size { get; set; }
         public long TotalItemCount { get; set; }
         public int CurrentItemCount { get; set; }
     }

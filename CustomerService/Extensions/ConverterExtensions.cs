@@ -105,7 +105,7 @@ namespace CustomerService.Extensions
         }
 
 
-        public static CustomerPaginationResponse ConvertToPaginationCustomerResponse(this IEnumerable<Customer> customers, int page, int formSize,long totalCustomerCount,int currentItemCount){
+        public static CustomerPaginationResponse ConvertToPaginationCustomerResponse(this IEnumerable<Customer> customers, int from, int size,long totalItemCount){
             List<CustomerResponse> customerResponses = new List<CustomerResponse>();
             customers.ToList().ForEach(c => customerResponses.Add(
                 new CustomerResponse
@@ -128,10 +128,10 @@ namespace CustomerService.Extensions
             return new CustomerPaginationResponse
                         {
                             CustomerResponses = customerResponses,
-                            Page = page,
-                            FormSize = formSize,
-                            TotalItemCount = totalCustomerCount,
-                            CurrentItemCount = currentItemCount
+                            From = from,
+                            Size = size,
+                            TotalItemCount = totalItemCount,
+                            CurrentItemCount = customers.Count()
                         };
         }
     }

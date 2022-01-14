@@ -84,11 +84,9 @@ namespace CustomerService.Repositories
             return result.Any();   
         }
 
-        public async Task<IEnumerable<Customer>> Page(int? page, int formSize)
+        public async Task<IEnumerable<Customer>> Page(int from, int size)
         {
-            int querypage = page.GetValueOrDefault(1) == 0 ? 1 : page.GetValueOrDefault(1);
-            int perPage = formSize;
-            var customers = await _customer.Find(c => c.isDeleted == false).Skip((page - 1) * perPage).Limit(perPage).ToListAsync();
+            var customers = await _customer.Find(c => c.isDeleted == false).Skip(from).Limit(size).ToListAsync();
             return customers;
         }
 

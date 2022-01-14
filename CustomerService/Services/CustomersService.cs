@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.ServerResponse;
 using Core.Validation;
 using CustomerService.Extensions;
+using CustomerService.Model;
 using CustomerService.Model.Dtos.Requests;
 using CustomerService.Model.Dtos.Requests.RequestsValidations;
 using CustomerService.Model.Dtos.Responses;
@@ -72,12 +73,11 @@ namespace CustomerService.Services
             return new ErrorResponse<CustomerResponse>(ResponseStatus.NotFound, default, ResultMessage.NotFoundCustomer);
         }
 
-        public async Task<Response<CustomerPaginationResponse>> Page(int page, int formSize)
+        public async Task<Response<CustomerPaginationResponse>> Page(int from, int size)
         {
-            var customers = await _customerRepository.Page(page,formSize);
-            var totalCustomerCount = await _customerRepository.TotalCountOfCustomer();
-            var currentItemCount = totalCustomerCount >= (page * formSize) ? formSize : (int)(totalCustomerCount % formSize);
-            return new SuccessResponse<CustomerPaginationResponse>(customers.ConvertToPaginationCustomerResponse(page, formSize,totalCustomerCount, currentItemCount));
+            var customers = await _customerRepository.Page(from,size);
+            var totalItemCount = await _customerRepository.TotalCountOfCustomer();
+            return new SuccessResponse<CustomerPaginationResponse>(customers.ConvertToPaginationCustomerResponse(from, size,totalItemCount));
         }
 
         public async Task<Response<bool>> SoftDelete(Guid id)
