@@ -1,23 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Core.Middleware;
-using Core.Repositories.Settings;
-using CustomerService.Repositories;
-using CustomerService.Repositories.Interfaces;
-using CustomerService.Services;
-using CustomerService.Services.Interfaces;
-using CustomerService.System;
+using CustomerService.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 
 namespace CustomerService
 {
@@ -33,11 +20,11 @@ namespace CustomerService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
+            services.AddRepositories(Configuration);
+            services.AddRServices();
+            services.AddUtilities();
             services.AddControllers();
-
-            services.AddCustomizedService(Configuration);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

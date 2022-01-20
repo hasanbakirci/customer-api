@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Core.Repositories.Settings;
+﻿using Core.Repositories.Settings;
 using CustomerService.Repositories;
 using CustomerService.Repositories.Interfaces;
 using CustomerService.Services;
@@ -14,23 +10,32 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace CustomerService.System
+namespace CustomerService.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCustomizedService(this IServiceCollection services, IConfiguration configuration){
-
-            services.AddSingleton<ICustomersService, CustomersService>();
-
-            services.AddSingleton<ICustomerRepository, CustomerRepository>();
-
-
+        public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configuration)
+        {
             BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
             services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
             services.AddSingleton<IMongoSettings>(d=>d.GetRequiredService<IOptions<MongoSettings>>().Value);
+            
+            services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            
+            return services;
+        }
 
+        public static IServiceCollection AddRServices(this IServiceCollection services)
+        {
+            services.AddSingleton<ICustomersService, CustomersService>();
+            
+            return services;
+        }
+
+        public static IServiceCollection AddUtilities(this IServiceCollection services)
+        {
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomerService", Version = "v1" });
