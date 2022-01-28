@@ -22,7 +22,8 @@ namespace CustomerService
         {
             
             services.AddRepositories(Configuration);
-            services.AddRServices();
+            services.AddServices();
+            services.AddClients();
             services.AddUtilities();
             services.AddControllers();
         }
@@ -43,9 +44,9 @@ namespace CustomerService
 
             app.UseCors("AllowMyOrigin");
 
-            app.UseMiddleware<ExceptionMiddleware>();
-
             app.UseAuthorization();
+            
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

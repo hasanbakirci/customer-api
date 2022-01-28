@@ -1,4 +1,5 @@
 ﻿using Core.Repositories.Settings;
+using CustomerService.Clients.AuthClients;
 using CustomerService.Repositories;
 using CustomerService.Repositories.Interfaces;
 using CustomerService.Services;
@@ -27,10 +28,16 @@ namespace CustomerService.Extensions
             return services;
         }
 
-        public static IServiceCollection AddRServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton<ICustomersService, CustomersService>();
             
+            return services;
+        }
+        public static IServiceCollection AddClients(this IServiceCollection services)
+        {
+            services.AddSingleton<IAuthClient, AuthClient>();
+            services.AddHttpClient();
             return services;
         }
 

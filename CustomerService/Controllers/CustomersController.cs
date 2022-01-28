@@ -29,6 +29,7 @@ namespace CustomerService.Controllers
         [HttpGet("Search/{id}")]
         
         [TokenAuthentication("Admin","Customer")]
+        //[SelfAuthentication]
         public async Task<IActionResult> Get(Guid id){
             var customer = await _customersService.GetById(id);
             return ApiResponse(customer);

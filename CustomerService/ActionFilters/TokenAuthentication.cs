@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Helper;
 using Core.ServerResponse;
+using CustomerService.Clients.AuthClients;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,36 +16,35 @@ namespace CustomerService.ActionFilters
         }
     }
 
-    public class TokenAuthentication : IActionFilter
+    public class TokenAuthentication : IAsyncActionFilter
     {
         private readonly string[] _roles;
+        private readonly IAuthClient _authClient;
 
-        public TokenAuthentication(string[] roles)
+        public TokenAuthentication(IAuthClient authClient, string[] roles)
         {
+            _authClient = authClient;
             _roles = roles;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var tokenWithBearerKeyword = context.HttpContext.Request.Headers["Authorization"].ToString();
-            if (String.IsNullOrEmpty(tokenWithBearerKeyword) || !tokenWithBearerKeyword.StartsWith("Bearer "))
+            var token = context.HttpContext.Request.Headers["Authorization"].ToString();
+            if (String.IsNullOrEmpty(token) || !token.StartsWith("Bearer "))
             {
                 context.Result = new UnauthorizedObjectResult(new ErrorResponse(ResponseStatus.UnAuthorized,"Token not found."));
                 return;
             }
-
-            var token = tokenWithBearerKeyword.Split("Bearer ")[1];
-            var tokenResponse = JwtHelper.ValidateJwtToken(token);
-            if (tokenResponse.Status == false || !_roles.ToList().Contains(tokenResponse.Role))
+            
+            var tokenIsValid = await _authClient.TokenValidate(token.Substring(7));
+            if (tokenIsValid.Success == false || !_roles.ToList().Contains(tokenIsValid.Data.Role) )
             {
-                context.Result = new UnauthorizedObjectResult(new ErrorResponse(ResponseStatus.UnAuthorized,"Invalid Token"));
+                context.Result = new UnauthorizedObjectResult(new ErrorResponse(ResponseStatus.UnAuthorized,"Invalid token"));
                 return;
             }
-        }
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            return;
+            await next();
         }
+        
     }
 }

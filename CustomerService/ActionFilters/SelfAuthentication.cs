@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Core.Helper;
 using Core.ServerResponse;
+using CustomerService.Clients.AuthClients;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,6 +16,13 @@ namespace CustomerService.ActionFilters
     }
     public class SelfAuthentication : IAsyncActionFilter
     {
+        private readonly IAuthClient _authClient;
+
+        public SelfAuthentication(IAuthClient authClient)
+        {
+            _authClient = authClient;
+        }
+
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var tokenWithBearerKeyword = context.HttpContext.Request.Headers["Authorization"].ToString();
@@ -32,8 +39,8 @@ namespace CustomerService.ActionFilters
             }
 
             var token = tokenWithBearerKeyword.Split("Bearer ")[1];
-            var tokenResponse = JwtHelper.ValidateJwtToken(token);
-            if (tokenResponse.Status == false || id.ToString() != tokenResponse.Id)
+            var tokenResponse = await _authClient.TokenValidate(token);
+            if (tokenResponse.Data.Status == false || id.ToString() != tokenResponse.Data.Id)
             {
                 context.Result =
                     new UnauthorizedObjectResult(new ErrorResponse(ResponseStatus.UnAuthorized, "Invalid Token"));
