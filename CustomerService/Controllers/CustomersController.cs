@@ -42,7 +42,7 @@ namespace CustomerService.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        [SelfAuthentication]
+        //[SelfAuthentication]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCustomerRequest request){
             var result = await _customersService.Update(id,request);
             return ApiResponse(result);

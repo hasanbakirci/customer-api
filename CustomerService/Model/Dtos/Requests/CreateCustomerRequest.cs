@@ -9,6 +9,6 @@ namespace CustomerService.Model.Dtos.Requests
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public CreateAddressRequest CreateAddressRequest { get; set; }
+        public CreateAddressRequest Address { get; set; }
     }
 }

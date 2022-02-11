@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.ServerResponse;
 using Core.Validation;
+using CustomerService.Clients.MessageQueueClients;
 using CustomerService.Extensions;
 using CustomerService.Model;
 using CustomerService.Model.Dtos.Requests;
@@ -16,10 +17,12 @@ namespace CustomerService.Services
     public class CustomersService : ICustomersService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IMessageQueueClient _messageQueueClient;
 
-        public CustomersService(ICustomerRepository customerRepository)
+        public CustomersService(ICustomerRepository customerRepository, IMessageQueueClient messageQueueClient)
         {
             _customerRepository = customerRepository;
+            _messageQueueClient = messageQueueClient;
         }
 
         public async Task<Response<Guid>> Create(CreateCustomerRequest request)
@@ -28,6 +31,7 @@ namespace CustomerService.Services
 
             var customer = request.ConvertToCustomer();
             var result = await _customerRepository.Create(customer);
+            _messageQueueClient.Publish<Customer>(RabbitMQHelper.CreatedQueue,customer);
             return new SuccessResponse<Guid>(result);
             
         }
@@ -95,7 +99,10 @@ namespace CustomerService.Services
             var customer = request.ConverToCustomer(id);
             var result = await _customerRepository.Update(customer.Id, customer);
             if (result)
-                return new SuccessResponse<bool>(result);
+            { 
+               _messageQueueClient.Publish<Customer>(RabbitMQHelper.UpdatedQueue,customer);
+               return new SuccessResponse<bool>(result);
+            }
             return new ErrorResponse<bool>(result);
             
         }

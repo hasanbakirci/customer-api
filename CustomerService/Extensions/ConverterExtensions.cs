@@ -16,10 +16,10 @@ namespace CustomerService.Extensions
                     Name = request.Name,
                     Email = request.Email,
                     Address = new Address{
-                                AddressLine = request.CreateAddressRequest.AddressLine,
-                                City = request.CreateAddressRequest.City,
-                                Country = request.CreateAddressRequest.Country,
-                                CityCode = request.CreateAddressRequest.CityCode
+                                AddressLine = request.Address.AddressLine,
+                                City = request.Address.City,
+                                Country = request.Address.Country,
+                                CityCode = request.Address.CityCode
                             }
                 };
         }
@@ -77,10 +77,10 @@ namespace CustomerService.Extensions
                     Email = request.Email,
                     isDeleted = request.isDeleted,
                     Address = new Address {
-                            AddressLine = request.UpdateAddressRequest.AddressLine,
-                            City = request.UpdateAddressRequest.City,
-                            Country = request.UpdateAddressRequest.Country,
-                            CityCode = request.UpdateAddressRequest.CityCode
+                            AddressLine = request.Address.AddressLine,
+                            City = request.Address.City,
+                            Country = request.Address.Country,
+                            CityCode = request.Address.CityCode
                         }
                 };
         }
@@ -94,10 +94,10 @@ namespace CustomerService.Extensions
                      Email = c.Email,
                      Address = new Address 
                         {
-                            AddressLine = c.CreateAddressRequest.AddressLine,
-                            City = c.CreateAddressRequest.City,
-                            Country = c.CreateAddressRequest.Country,
-                            CityCode = c.CreateAddressRequest.CityCode
+                            AddressLine = c.Address.AddressLine,
+                            City = c.Address.City,
+                            Country = c.Address.Country,
+                            CityCode = c.Address.CityCode
                         }
                  }));
                  return customers;

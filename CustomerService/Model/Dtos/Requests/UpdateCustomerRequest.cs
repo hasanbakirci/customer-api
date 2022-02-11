@@ -10,6 +10,6 @@ namespace CustomerService.Model.Dtos.Requests
         public string Name { get; set; }
         public string Email { get; set; }
         public bool isDeleted { get; set; }
-        public UpdateAddressRequest UpdateAddressRequest { get; set; }
+        public UpdateAddressRequest Address { get; set; }
     }
 }

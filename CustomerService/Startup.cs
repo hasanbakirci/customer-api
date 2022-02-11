@@ -25,6 +25,7 @@ namespace CustomerService
             services.AddServices();
             services.AddClients();
             services.AddUtilities();
+            services.AddRabbit();
             services.AddControllers();
         }
 

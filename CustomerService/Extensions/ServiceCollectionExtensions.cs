@@ -1,5 +1,6 @@
 ﻿using Core.Repositories.Settings;
 using CustomerService.Clients.AuthClients;
+using CustomerService.Clients.MessageQueueClients;
 using CustomerService.Repositories;
 using CustomerService.Repositories.Interfaces;
 using CustomerService.Services;
@@ -38,6 +39,12 @@ namespace CustomerService.Extensions
         {
             services.AddSingleton<IAuthClient, AuthClient>();
             services.AddHttpClient();
+            return services;
+        }
+
+        public static IServiceCollection AddRabbit(this IServiceCollection services)
+        {
+            services.AddSingleton<IMessageQueueClient, RabbitMQClient>();
             return services;
         }
 

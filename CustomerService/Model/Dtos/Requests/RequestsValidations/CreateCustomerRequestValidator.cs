@@ -13,10 +13,10 @@ namespace CustomerService.Model.Dtos.Requests.RequestsValidations
             RuleFor(r => r.Name).MinimumLength(2).MaximumLength(25).NotEmpty();
             RuleFor(r => r.Email).EmailAddress().NotEmpty();
 
-            RuleFor(r => r.CreateAddressRequest.AddressLine).MinimumLength(3).MaximumLength(150).NotEmpty();
-            RuleFor(r => r.CreateAddressRequest.City).MinimumLength(3).MaximumLength(25).NotEmpty();
-            RuleFor(r => r.CreateAddressRequest.Country).MinimumLength(3).MaximumLength(25).NotEmpty();
-            RuleFor(r => r.CreateAddressRequest.CityCode).GreaterThan(0).NotEmpty();
+            RuleFor(r => r.Address.AddressLine).MinimumLength(3).MaximumLength(150).NotEmpty();
+            RuleFor(r => r.Address.City).MinimumLength(3).MaximumLength(25).NotEmpty();
+            RuleFor(r => r.Address.Country).MinimumLength(3).MaximumLength(25).NotEmpty();
+            RuleFor(r => r.Address.CityCode).GreaterThan(0).NotEmpty();
         }
     }
 }
