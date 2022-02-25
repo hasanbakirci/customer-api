@@ -45,6 +45,7 @@ namespace CustomerService.Extensions
         public static IServiceCollection AddRabbit(this IServiceCollection services)
         {
             services.AddSingleton<IMessageQueueClient, RabbitMQClient>();
+            services.AddSingleton<KafkaClient>();
             return services;
         }
 

@@ -1,5 +1,6 @@
 using Core.Middleware;
 using CustomerService.Extensions;
+using CustomerService.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +48,9 @@ namespace CustomerService
 
             app.UseAuthorization();
             
+            app.UseMiddleware<KafkaLoggerMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
+            
 
             app.UseEndpoints(endpoints =>
             {
