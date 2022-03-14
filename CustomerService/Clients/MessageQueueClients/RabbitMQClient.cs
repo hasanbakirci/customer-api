@@ -27,8 +27,10 @@ namespace CustomerService.Clients.MessageQueueClients
             _channel.ExchangeDeclare(RabbitMQHelper.CustomerExchange,ExchangeType.Direct,true);
             _channel.QueueDeclare(RabbitMQHelper.CreatedQueue, false, false, false, null);
             _channel.QueueDeclare(RabbitMQHelper.UpdatedQueue, false, false, false, null);
+            _channel.QueueDeclare(RabbitMQHelper.DeletedQueue, false, false, false, null);
             _channel.QueueBind(RabbitMQHelper.CreatedQueue,RabbitMQHelper.CustomerExchange,RabbitMQHelper.CreatedQueue);
             _channel.QueueBind(RabbitMQHelper.UpdatedQueue,RabbitMQHelper.CustomerExchange,RabbitMQHelper.UpdatedQueue);
+            _channel.QueueBind(RabbitMQHelper.DeletedQueue,RabbitMQHelper.CustomerExchange,RabbitMQHelper.DeletedQueue);
         }
         
         public void Publish<T>(string queueName, T message)

@@ -49,7 +49,7 @@ namespace CustomerService.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [TokenAuthentication("Admin")]
+        //[TokenAuthentication("Admin")]
         public async Task<IActionResult> Delete(Guid id){
             var result = await _customersService.Delete(id);
             return ApiResponse(result);

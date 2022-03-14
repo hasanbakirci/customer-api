@@ -4,6 +4,7 @@
     {
         public static string CreatedQueue => "Created-Customer-Queue";
         public static string UpdatedQueue => "Updated-Customer-Queue";
+        public static string DeletedQueue => "Deleted-Customer-Queue";
         public static string CustomerExchange => "Customer-Exchange";
     }
 }

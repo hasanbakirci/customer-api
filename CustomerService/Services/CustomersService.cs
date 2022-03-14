@@ -52,8 +52,12 @@ namespace CustomerService.Services
         public async Task<Response<bool>> Delete(Guid id)
         {
             var result = await _customerRepository.Delete(id);
-            if(result)
+            if (result)
+            {
+                _messageQueueClient.Publish(RabbitMQHelper.DeletedQueue,id);
                 return new SuccessResponse<bool>(result);
+            }
+                
             return new ErrorResponse<bool>(result);
         }
 
